@@ -11,46 +11,35 @@ class Lesson:
     list1 = []  # 存放所有课程信息
     # 测试函数
     def judge(self,var):
-        if re.match('星期\d',var):
+        if re.match('星期\d\s第\d节\s[^x00-xff]+',var):
+            print(1)
+            pass
+        elif re.match('星期\d',var):
             x=re.search('\d',var)
-            self.doweekseek(int(x.group()))
+            self.Search(int(x.group()),'doweek')
         elif re.match('第\d节',var):
             x = re.search('\d', var)
-            self.secnumseek(int(x.group()))
-        elif re.match('[^x00-xff]',var):
+            self.Search(int(x.group()),' secnum')
+        elif re.match('[^x00-xff]+',var):
             x=re.match('[^x00-xff]+',var)
             print(x.group())
-            self.nameseek(x.group())
-    def doweekseek(self,var):
+            self.Search(x.group(),'name')
+    def Search(self,var,key):
         text = Text(top, width=17, height=11)  # 创建文本控件
         text.place(x=1,y=1)  # 在屏幕上放置文本控件
         for x in self.list1:
-            if x['doweek']==var:
+            if x[key]==var:
                 src='星期%d 第%s节 %s' %(x['doweek'],x['secnum'],x['name'])
                 text.insert(INSERT,src)  # 在控件上放置文本
-    def secnumseek(self,var):
-        text = Text(top, width=17, height=11)  # 创建文本控件
-        text.place(x=1, y=1)  # 在屏幕上放置文本控件
-        for x in self.list1:
-            if x['secnum'] == var:
-                src = '星期%d 第%s节 %s' % (x['doweek'], x['secnum'], x['name'])
-                text.insert(INSERT, src)  # 在控件上放置文本
-    def nameseek(self,var):
-        text = Text(top, width=17, height=11)  # 创建文本控件
-        text.place(x=1, y=1)  # 在屏幕上放置文本控件
-        for x in self.list1:
-            if x['name'] == var:
-                src = '星期%d 第%s节 %s' % (x['doweek'], x['secnum'], x['name'])
-                text.insert(INSERT, src)  # 在控件上放置文本
 lesson1=Lesson()
 
 
 top = Tk()  # 创建一个窗体
 top.geometry("1100x400+200+50")  # 改变窗体的大小
 
-
 # 读取与显示
-while(j<11):
+def fuc():
+    i=1
     while (i<6):
         b = c.read(6)
         a = b.decode('utf-8')
@@ -67,25 +56,13 @@ while(j<11):
         text.insert(INSERT, scr)  # 在控件上放置文本
 
         i=i+1
+while(j<11):
+    fuc()
     j=j+1
-    i=1
     c.seek(7, os.SEEK_CUR)  # 指针移动
 j=11
-i=1
 c.seek(3, os.SEEK_CUR)  # 指针移动
-while (i<6):
-    b = c.read(6)
-    a = b.decode('utf-8')
-    locals()['lesson'+str(i)+str(j)]= {'doweek': i, 'name': a, 'secnum': j}
-    c.seek(5, os.SEEK_CUR)  # 指针移动
-    lesson1.list1.append(locals()['lesson' + str(i) + str(j)])  # 存入list1
-    scr = locals()['lesson' + str(i) + str(j)]['name']
-    x = locals()['lesson' + str(i) + str(j)]['doweek']
-    y = locals()['lesson' + str(i) + str(j)]['secnum']
-    text = Text(top, width=30, height=5)  # 创建一个文本控件
-    text.place(x=x * 215 + 80, y=locals()['lesson' + str(i) + str(j)]['secnum'] * 70 + 30)  # 在屏幕上放置文本控件
-    text.insert(INSERT, scr)  # 在控件上放置文本
-    i=i+1
+fuc()
 
 
 # 放置输入框
