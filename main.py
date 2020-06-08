@@ -1,113 +1,161 @@
+
+c= open('curriculum.txt', mode='rb')  # 打开文件
+import os
+def move(x):
+    c.seek(x,os.SEEK_CUR)  # 移动指针
+def setext():
+    pass
+move(78)
+i=1
+j=1
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+import re
+
+class Lesson:
+    list1 = []  # 存放所有课程信息
+    asw=[]
+    answer=[]
+    # 测试函数
+    def judge(self,var):
+        # 搜索
+        self.asw=[]
+        self.answer=[]
+        self.search1(var,'doweek','星期\d','\d')
+        self.search1(var,'secnum','第\d{1,2}节','\d{1,2}')
+        self.search2(var,'name',r'\b[^x00-xff]+\b')
+
+        # 筛选结果
+        k=0
+        for dict in self.asw:
+            j=0
+            for item in self.asw:
+
+                if dict['doweek'] == item['doweek'] and dict['secnum'] == item['secnum'] and k!=j:
+                    self.answer.append(dict)  # 相同的元素保留
+                else:
+                    pass
+                j+=1
+            k+=1
+        if self.answer==[]:
+            self.answer=self.asw  # 无相同元素直接输出asw
+        # 去重算法，无用
+        from functools import reduce
+        run_function = lambda x, y: x if y in x else x+[y]
+        self.answer = reduce(run_function, [[], ] + self.answer)
+
+        # 放置消息
+        from tkinter import messagebox
+        src=''
+        for x in self.answer:
+            src =src+ '星期%d 第%s节 %s \n' % (x['doweek'], x['secnum'], x['name'])
+        ms=messagebox.showinfo(title='搜索结果',message=src)
+        print(ms)
+        var=''
+    def search1(self,var,key,mtcsrc,mtc1):
+        if re.search(mtcsrc,var):
+            x=re.search(mtcsrc,var)
+            x=x.group()
+            x1=re.search(mtc1,x)
+            for x in self.list1:
+                if x[key]==int(x1.group()):
+                    self.asw.append(x)
+    def search2(self, var, key, mtcsrc):
+        if re.search(mtcsrc, var):
+            a=re.search(mtcsrc, var)
+            x1=a.group()
+            x1=x1.strip()
+            for x in self.list1:
+                if x[key] == x1:
+                    self.asw.append(x)
+lesson1=Lesson()
 
 
-class FileRead:
-    #   以下变量存放必要的数据
-    file = ""
-    #   文件的地址
-    workday = -1
-    #   每周教学日
-    Class_everyday = -1
-    #   每日课程数
-    ClassDict = {}
-    #   存放每周课程
-    ClassList = []
-    #   存放每门课程对应的教学安排
-    Total = set()
-    #   存放所有课程坐标
-    Search1 = set()
-    Search2 = set()
-    Search3 = set()
-    #   存放每个筛选条件的结果
-    Result = set()
-    #   存放总结果
+top = Tk()  # 创建一个窗体
+top.geometry("1100x400+200+50")  # 改变窗体的大小
 
-    def fileread(self):
-        #   查找文件并获取地址
-        root = Tk()
-        root.withdraw()
-        path = askopenfilename()
-        self.file = open(path, mode="r+", encoding='UTF-8')
+# 读取与显示
+def fuc():
+    i=1
+    while (i<6):
+        b = c.read(6)
+        a = b.decode('utf-8')
+        locals()['lesson'+str(i)+str(j)]= {'doweek': i, 'name': a, 'secnum': j}
+        lesson1.list1.append(locals()['lesson'+str(i)+str(j)])  # 存入list1
+        move(5)  # 指针移动
+        scr = locals()['lesson'+str(i)+str(j)]['name']
 
-    def GetDictData(self):
-        #   从文件中得到课程安排
-        import re
-        self.Class_everyday = -1
-        for line in self.file.readlines():
-            self.Class_everyday += 1
-            self.workday = -1
-            #   重置workday，因为是一行行读取
-            bj = re.finditer(r'([\u4E00-\u9FA5])+[^\s*\b]', line, re.M | re.I)
-            #   正则表达式剪切字符串
-            for match in bj:
-                self.workday += 1
-                self.ClassDict[(self.workday, self.Class_everyday)] = match.group()
-        self.file.close()
-        #   关闭文件
+        # 确认文本的位置
+        x = locals()['lesson'+str(i)+str(j)]['doweek']
+        y = locals()['lesson'+str(i)+str(j)]['secnum']
+        text = Text(top, width=30, height=5)  # 创建一个文本控件
+        text.place(x=x * 215 + 80, y=locals()['lesson'+str(i)+str(j)]['secnum'] * 70 + 30)  # 在屏幕上放置文本控件
+        text.insert(INSERT, scr)  # 在控件上放置文本
 
-    def GetToatalSet(self):
-        for i in range(1, self.workday+1):
-            for j in range(1, self.Class_everyday+1):
-                self.Total.add((i, j))
-
-    def SearchClassName(self):
-        #   根据课程名，输出课程所在位置
-        def get_key1(dct, value):
-            return list(filter(lambda k: dct[k] == value, dct))
-        ClassName = input("查询课程：")
-        if ClassName == "":
-            self.Search1 = self.Total
-        else:
-            self.ClassList = get_key1(self.ClassDict, ClassName)
-            for i in range(self.workday + 1):
-                for j in range(self.Class_everyday + 1):
-                    if (i, j) in self.ClassList:
-                        self.Search1.add((i, j))
+        i=i+1
+while(j<11):
+    fuc()
+    j=j+1
+    move(7)  # 指针移动
+j=11
+move(3)  # 指针移动
+fuc()
 
 
-    def SearchClassPos(self):
-        #   查询第几节课的所以课程
-        ClassPos = input("查询第几节课：")
-        if ClassPos == "":
-             self.Search2 = self.Total
-        else:
-            ClassPos = int(ClassPos)
-            if ClassPos > self.Class_everyday:
-                print("输入错误！")
-            else:
-                for i in range(1, self.workday + 1):
-                    if (i, ClassPos) in self.ClassDict:
-                        self.Search2.add((i, ClassPos))
+# 放置输入框
+entry=Entry(top,bd=4)
+entry.pack()
 
-    def SearchClassWeek(self):
-        #   查询星期几的课
-        Day = input("查询星期几：")
-        if Day == "" :
-            self.Search3 = self.Total
-        else:
-            Day = int(Day)
-            if Day > self.workday:
-                print("输入错误！")
-            else:
-                for j in range(1, self.Class_everyday + 1):
-                    if (Day, j) in self.ClassDict:
-                        self.Search3.add((Day, j))
+# 搜索按钮
+def insert_point():
+    var = entry.get()  # 获取输入内容
 
-    def GetResult(self):
-        self.Result = self.Search1.intersection(self.Search2, self.Search3)
-        del self.Search1 
-        del self.Search2
-        del self.Search3
-        print(self.Result)
+    if re.match('星期一',var):
+        var=re.sub('星期一','星期1',var)
+    elif re.match('星期二',var):
+        var = re.sub('星期二', '星期2', var)
+    elif re.match('星期三',var):
+        var=re.sub('星期三','星期3',var)
+    elif re.match('星期四',var):
+        var=re.sub('星期四','星期4',var)
+    elif re.match('星期五',var):
+        var=re.sub('星期五','星期5',var)
+    elif re.match('第一节',var):
+        var=re.sub('第一节','第1节',var)
+    elif re.match('第二节',var):
+        var = re.sub('第二节', '第2节', var)
+    elif re.match('第三节',var):
+        var=re.sub('第三节','第3节',var)
+    elif re.match('第四节',var):
+        var=re.sub('第四节','第4节',var)
+    elif re.match('第五节',var):
+        var=re.sub('第五节','第5节',var)
+    elif re.match('第六节',var):
+        var=re.sub('第六节','第6节',var)
+    elif re.match('第七节',var):
+        var=re.sub('第七节','第7节',var)
+    elif re.match('第八节',var):
+        var=re.sub('第八节','第8节',var)
+    elif re.match('第九节',var):
+        var=re.sub('第九节','第9节',var)
+    elif re.match('第十节',var):
+        var=re.sub('第十节','第10节',var)
+    elif re.match('第十一节',var):
+        var=re.sub('第十一节','第11节',var)
+    lesson1.judge(var)  # 测试
+b1 = Button(top,text="搜索",width=15,height=2,command=insert_point)  # 按钮，绑定事件insert_input
+b1.pack()
 
-
-
-a = FileRead()
-a.fileread()
-a.GetDictData()
-a.GetToatalSet()
-a.SearchClassName()
-a.SearchClassWeek()
-a.SearchClassPos()
-a.GetResult()
+# 放置表格
+i=1
+while(i<6):
+    text = Text(top, width=30, height=1)
+    text.place(x=295+(i-1)*215,y=80)
+    text.insert(INSERT,'星期%s' %i)
+    i+=1
+i=1
+while(i<12):
+    text = Text(top, width=10, height=5)
+    text.place(x=220, y=100+(i-1)*70)
+    text.insert(INSERT, '第%s节' % i)
+    i += 1
+top.mainloop()  # 进入消息循环
