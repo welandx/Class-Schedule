@@ -96,9 +96,6 @@ class FileRead:
 
     def GetResult(self):
         self.Result = self.Search1.intersection(self.Search2, self.Search3)
-        del self.Search1
-        del self.Search2
-        del self.Search3
         print(self.Result)
 
 
