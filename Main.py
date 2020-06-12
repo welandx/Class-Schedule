@@ -34,11 +34,14 @@ def getData():
     ClassName = entry3.get()
     a.SearchClassName(ClassName)
     a.GetResult()
-    for i in range(1,a.workday):
-        for j in range(1, a.Class_everyday):
+    for i in range(1,a.workday+1):
+        for j in range(1, a.Class_everyday+1):
             if (i,j) in a.Result:
                 rscr += "星期%d第%d节课 %s\n"%(i,j,a.ClassDict[i,j])
     tkinter.messagebox.showinfo("查询结果",rscr)
+    a.Search1=a.Search2=a.Search3=set()
+    del a.Result
+
 b1 = Button(frmLS, text="搜索", width=10, height=1, command=getData).grid(row=0, column=7)
 #   定义搜索按钮的功能
 
