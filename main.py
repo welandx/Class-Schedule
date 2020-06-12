@@ -106,14 +106,24 @@ def insert_point2():
 top = Tk()  # 创建一个窗体
 top.title('1班2019-2020第二学期课程表')
 top.geometry("1100x400+200+50")  # 改变窗体的大小
+frame1=Frame(top)
+frame1.pack()
+frame2=Frame(frame1)
+frame2.pack(side='right',anchor='ne')
+frame3=Frame(frame1)
+frame3.pack(side='left')
+# 标题
+import tkinter.font as tkFont
+ft1 = tkFont.Font(family='Fixdsys', size=30, weight=tkFont.BOLD)
+Label(frame3,text='1班2019-2020第二学期课程表',font=ft1).grid(padx=0, pady=0, ipadx=405, ipady=20)
 # 放置输入框
-entry=Entry(top,bd=4)
+entry=Entry(frame1,bd=4)
 entry.pack(side='top',anchor='ne')
 # 放置按钮和frame
-b1 = Button(top,text="搜索",width=15,height=2,command=insert_point1,bg='lightblue')  # 按钮，绑定事件insert_input1
-b1.pack(side='top',anchor='ne')
-b2 = Button(top,text="搜索时间",width=15,height=2,command=insert_point2,bg='lightblue')  # 按钮，绑定事件insert_input2
-b2.pack(side='top',anchor='ne')
+b1 = Button(frame1,text="搜索",width=15,height=2,command=insert_point1,bg='lightblue')  # 按钮，绑定事件insert_input1
+b1.pack(side='top')
+b2 = Button(frame1,text="搜索时间",width=15,height=2,command=insert_point2,bg='lightblue')  # 按钮，绑定事件insert_input2
+b2.pack(side='top')
 f2=Frame(top)
 f2.pack()
 f4=Frame(f2)
