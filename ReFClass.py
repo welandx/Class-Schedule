@@ -23,12 +23,14 @@ class FileRead:
     Result = set()
     #   存放总结果
 
+
     def fileread(self):
         #   查找文件并获取地址
         root = Tk()
         root.withdraw()
         path = askopenfilename()
         self.file = open(path, mode="r+", encoding='UTF-8')
+
 
     def GetDictData(self):
         #   从文件中得到课程安排
@@ -44,18 +46,16 @@ class FileRead:
                 self.workday += 1
                 self.ClassDict[(self.workday, self.Class_everyday)] = match.group()
         self.file.close()
-        #   关闭文件
-
     def GetToatalSet(self):
         for i in range(1, self.workday+1):
             for j in range(1, self.Class_everyday+1):
                 self.Total.add((i, j))
 
-    def SearchClassName(self):
+
+    def SearchClassName(self,ClassName):
         #   根据课程名，输出课程所在位置
         def get_key1(dct, value):
             return list(filter(lambda k: dct[k] == value, dct))
-        ClassName = input("查询课程：")
         if ClassName == "":
             self.Search1 = self.Total
         else:
@@ -66,9 +66,9 @@ class FileRead:
                         self.Search1.add((i, j))
 
 
-    def SearchClassPos(self):
-        #   查询第几节课的所以课程
-        ClassPos = input("查询第几节课：")
+
+    def SearchClassPos(self,ClassPos):
+        #   查询第几节课的所有课程
         if ClassPos == "":
              self.Search2 = self.Total
         else:
@@ -80,10 +80,10 @@ class FileRead:
                     if (i, ClassPos) in self.ClassDict:
                         self.Search2.add((i, ClassPos))
 
-    def SearchClassWeek(self):
+
+    def SearchClassWeek(self,Day):
         #   查询星期几的课
-        Day = input("查询星期几：")
-        if Day == "" :
+        if Day == "":
             self.Search3 = self.Total
         else:
             Day = int(Day)
@@ -96,15 +96,5 @@ class FileRead:
 
     def GetResult(self):
         self.Result = self.Search1.intersection(self.Search2, self.Search3)
-        print(self.Result)
 
 
-
-a = FileRead()
-a.fileread()
-a.GetDictData()
-a.GetToatalSet()
-a.SearchClassName()
-a.SearchClassWeek()
-a.SearchClassPos()
-a.GetResult()
