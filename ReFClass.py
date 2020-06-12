@@ -16,10 +16,10 @@ class FileRead:
     #   存放每门课程对应的教学安排
     Total = set()
     #   存放所有课程坐标
-    Search1 = set()
-    Search2 = set()
-    Search3 = set()
-    #   存放每个筛选条件的结果
+    Search1 = set((99,98))
+    Search2 = set((99,85))
+    Search3 = set((99,86))
+    #   存放每个筛选条件的结果，并初始设置不同的集合元素，作为”特征值“，来区分三个集合
     Result = set()
     #   存放总结果
 
@@ -56,8 +56,8 @@ class FileRead:
         #   根据课程名，输出课程所在位置
         def get_key1(dct, value):
             return list(filter(lambda k: dct[k] == value, dct))
-        if ClassName == "":
-            self.Search1 = self.Total
+        if ClassName == '':
+            self.Search1 = self.Total | self.Search1
         else:
             self.ClassList = get_key1(self.ClassDict, ClassName)
             for i in range(self.workday + 1):
@@ -69,8 +69,8 @@ class FileRead:
 
     def SearchClassPos(self,ClassPos):
         #   查询第几节课的所有课程
-        if ClassPos == "":
-             self.Search2 = self.Total
+        if ClassPos == '':
+             self.Search2 = self.Total | self.Search2
         else:
             ClassPos = int(ClassPos)
             if ClassPos > self.Class_everyday:
@@ -83,8 +83,8 @@ class FileRead:
 
     def SearchClassWeek(self,Day):
         #   查询星期几的课
-        if Day == "":
-            self.Search3 = self.Total
+        if Day == '':
+            self.Search3 = self.Total | self.Search3
         else:
             Day = int(Day)
             if Day > self.workday:
