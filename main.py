@@ -1,8 +1,9 @@
 
 
-import os
+
 from tkinter import *
 import re
+import os
 def move(x):
     c.seek(x,os.SEEK_CUR)  # 移动指针
 def fuc():
@@ -10,21 +11,19 @@ def fuc():
     while (i<6):
         b = c.read(6)
         a = b.decode('utf-8')
-        locals()['lesson'+str(i)+str(j)]= {'doweek': i, 'name': a, 'secnum': j,'time':lesson1.time[j-1]}
-        lesson1.list1.append(locals()['lesson'+str(i)+str(j)])  # 存入list1
+        classdict= {'doweek': i, 'name': a, 'secnum': j,'time':lesson1.time[j-1]}
+        lesson1.list1.append(classdict)  # 存入list1
         move(5)  # 指针移动
-        scr = locals()['lesson'+str(i)+str(j)]['name']
+        scr = classdict['name']
 
         # 确认文本的位置
-        Label(f1, text=scr,bg='lightblue',font='48').grid(row=j, column=i, padx=0, pady=0, ipadx=100, ipady=20)
+        Label(f1, text=scr,bg='lightblue',font='48').grid(row=j, column=i,  ipadx=100, ipady=20)
         i=i+1
-
 class Lesson:
     list1 = []  # 存放所有课程信息
     asw=[]
     answer=[]
     time=['8:00-8:50','9:00-9:50','10:00-10:50','11:00-11:50','13:50-14:40','14:50-15:40','15:50-16:40','16:50-17:40','18:30-19:20','19:30-20:20','20:30-21:20']
-    # 测试函数
     def judge(self,var):
         # 搜索
         self.asw=[]
@@ -64,9 +63,9 @@ class Lesson:
         if re.search(mtcsrc,var):
             x=re.search(mtcsrc,var)
             x=x.group()
-            x1=re.search(mtc1,x)
+            x1=re.search(mtc1,x).group()
             for x in self.list1:
-                if x[key]==int(x1.group()):
+                if x[key]==int(x1):
                     self.asw.append(x)
     def search2(self, var, key, mtcsrc):
         if re.search(mtcsrc, var):
@@ -85,7 +84,7 @@ def insert_point1():
     blist=['星期1','星期2','星期3','星期4','星期5','第1节','第2节','第3节','第4节','第5节','第6节','第7节','第8节','第9节','第10节','第11节']
     i=0
     while(i<16):
-        if re.match(alist[i],var):
+        if re.search(alist[i],var):
             var=re.sub(alist[i],blist[i],var)
         i+=1
     lesson1.judge(var)  # 测试
@@ -149,16 +148,16 @@ fuc()
 
 # 放置表格
 i=1
-Label(f4, text='                            ',bg='lightgreen',).grid(row=1, column=1, padx=0, pady=0, ipadx=48, ipady=20)
+Label(f4, text='                            ',bg='lightgreen',).grid(row=1, column=1,ipadx=48, ipady=20)
 while(i<6):
-    Label(f4, text='星期%s' % i,bg='lightgreen',font='48').grid(row=1, column=i+1, padx=0, pady=0, ipadx=95, ipady=20)
+    Label(f4, text='星期%s' % i,bg='lightgreen',font='48').grid(row=1, column=i+1, ipadx=95, ipady=20)
     i+=1
 i=1
 while(i<10):
-    Label(f3, text='第%s节' % i,bg='lightyellow',font='48').grid(row=i, column=1, padx=0, pady=0, ipadx=80, ipady=20)
+    Label(f3, text='第%s节' % i,bg='lightyellow',font='48').grid(row=i, column=1, ipadx=80, ipady=20)
     i += 1
 i=9
 while(i<12):
-    Label(f3, text='第%s节' % i,bg='lightyellow',font='48').grid(row=i, column=1, padx=0, pady=0, ipadx=76, ipady=20)
+    Label(f3, text='第%s节' % i,bg='lightyellow',font='48').grid(row=i, column=1,ipadx=76, ipady=20)
     i += 1
 top.mainloop()  # 进入消息循环
